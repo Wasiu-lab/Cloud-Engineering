@@ -25,6 +25,7 @@ The network is divided into **four subnets** within the FinPayTech VPC. It inclu
 | AZ1-Private_Subnet | 172.16.0.96/28 | 255.255.255.240 | 16 | 5 | 11 |
 | AZ2-Private_Subnet | 172.16.0.112/29 | 255.255.255.248 | 8 | 5 | 3 |
 
+![CIDR](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/CIDR.PNG)
 
 ---
 ## **Business Case for FinPayTech VPC**
@@ -53,10 +54,10 @@ FinPayTech provides financial services, requiring a cloud network that is **secu
 ## **Project Screenshots**
 
 ### **1. Internet Gateway (IGW) Setup**
-![Internet Gateway](./mnt/data/igw.PNG)
+![Internet Gateway](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/igw.PNG)
 
 ### **2. Subnet Configuration**
-![Subnet](./mnt/data/subnet.PNG)
+![Subnet](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/subnet.PNG)
 
 ### **3. VPC Details**
-![VPC](./mnt/data/vpc.PNG)
+![VPC](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/vpc.PNG)
