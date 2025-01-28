@@ -8,6 +8,8 @@ FinPayTech is a financial technology company that requires a **secure, scalable,
 ### **VPC Design Overview**
 The network is divided into **four subnets** within the FinPayTech VPC. It includes both **public and private subnets** across two availability zones (AZ1 and AZ2) to ensure high availability and fault tolerance.
 
+![Architecture](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/draw.png)
+
 ### **AWS Components Used**:
 - **VPC**: Isolated network within AWS (CIDR: `172.16.0.0/25`)
 - **Internet Gateway (IGW)**: Enables internet access for public subnets
