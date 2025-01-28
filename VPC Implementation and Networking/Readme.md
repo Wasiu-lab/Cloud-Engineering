@@ -55,11 +55,12 @@ FinPayTech provides financial services, requiring a cloud network that is **secu
 ---
 ## **Project Screenshots**
 
-### **1. Internet Gateway (IGW) Setup**
+
+### **1. VPC Details**
+![VPC](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/vpc.PNG)
+
+### **2. Internet Gateway (IGW) Setup**
 ![Internet Gateway](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/igw.PNG)
 
-### **2. Subnet Configuration**
+### **3. Subnet Configuration**
 ![Subnet](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/subnet.PNG)
-
-### **3. VPC Details**
-![VPC](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/VPC%20Implementation%20and%20Networking/PIC/vpc.PNG)
