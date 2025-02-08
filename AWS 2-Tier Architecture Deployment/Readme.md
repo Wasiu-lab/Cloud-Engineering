@@ -8,6 +8,8 @@ This project demonstrates the deployment of a highly available and secure **2-ti
 ![Architecture Diagram](./2-tier.drawio.png)  
 *Figure 1: High-Level Architecture Diagram.*
 
+This architecture represents a **highly available and secure 2-tier application setup** in AWS, consisting of a web tier and a database tier within a Virtual Private Cloud (VPC) with a CIDR block of `10.0.0.0/26`. The web servers are hosted in public subnets (`10.0.0.0/28` and `10.0.0.16/28`) and are accessible via an Internet Gateway (IGW) for handling HTTP/HTTPS requests, while the database is hosted in private subnets (`10.0.0.32/28` and `10.0.0.48/28`) to ensure it is not directly exposed to the Internet. A NAT Gateway in the public subnet provides outbound Internet access for private resources. Security Groups are used to control traffic: the web tier allows HTTP, HTTPS, and SSH traffic from trusted sources, while the database tier only accepts traffic from the web tier on port 3306. The architecture spans multiple Availability Zones (AZs) for high availability and fault tolerance. Users interact with the web servers, which securely connect to the database to process and store data, ensuring a scalable, robust, and secure system.
+
 ---
 
 ## **Step-by-Step Guide**
