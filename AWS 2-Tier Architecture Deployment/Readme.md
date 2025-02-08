@@ -12,168 +12,89 @@ This architecture represents a **highly available and secure 2-tier application 
 
 ---
 
-## **Step-by-Step Guide**
+## **Project Scope**
 
-### **Step 1: VPC and Networking**
-#### 1.1 Create a VPC
-1. Navigate to the **VPC Dashboard** in AWS.
-2. Click **Create VPC** and configure:
-   - **Name**: `2-Tier-VPC`.
-   - **IPv4 CIDR Block**: `10.0.0.0/16`.
-   - Enable **DNS Hostnames** and **DNS Resolution**.
-3. Save your VPC configuration.
+The goal of this project is to design, configure, and deploy a 2-tier architecture with the following components:
 
-**Screenshot Placeholder**: Add a screenshot of the VPC configuration here.  
-`![VPC Configuration Screenshot](./images/vpc-configuration.png)`
-
-#### 1.2 Create Subnets
-1. Create a **Public Subnet**:
-   - **Name**: `Public-Subnet`.
-   - **Availability Zone**: `us-east-1a`.
-   - **CIDR Block**: `10.0.0.0/28`.
-   - Enable **Auto-assign Public IP**.
-2. Create a **Private Subnet**:
-   - **Name**: `Private-Subnet`.
-   - **Availability Zone**: `us-east-1b`.
-   - **CIDR Block**: `10.0.0.16/28`.
-
-**Screenshot Placeholder**: Add a screenshot of subnet creation here.  
-`![Subnet Creation Screenshot](./images/subnet-creation.png)`
-
-#### 1.3 Attach an Internet Gateway
-1. Create an **Internet Gateway** in the **VPC Dashboard**.
-2. Attach the IGW to your VPC.
-
-**Screenshot Placeholder**: Add a screenshot of the IGW attachment here.  
-`![Internet Gateway Attachment Screenshot](./images/internet-gateway.png)`
-
-#### 1.4 Configure Route Tables
-1. **Public Route Table**:
-   - Associate the public subnet with this route table.
-   - Add a route for `0.0.0.0/0` pointing to the Internet Gateway.
-2. **Private Route Table**:
-   - Associate the private subnet with this route table.
-   - Add a route for `0.0.0.0/0` pointing to a **NAT Gateway**.
-
-**Screenshot Placeholder**: Add screenshots of public and private route table configurations here.  
-`![Route Table Configuration Screenshot](./images/route-tables.png)`
-
-#### 1.5 Create a NAT Gateway
-1. In **NAT Gateways**, create a NAT Gateway in the **Public Subnet**.
-2. Allocate an Elastic IP for the NAT Gateway.
-3. Ensure the private route table uses this NAT Gateway for internet-bound traffic.
-
-**Screenshot Placeholder**: Add a screenshot of the NAT Gateway setup here.  
-`![NAT Gateway Setup Screenshot](./images/nat-gateway.png)`
+1. **VPC and Networking Configuration:**
+   - Custom VPC with four subnets (two public, two private).
+   - Internet Gateway for public subnet Internet access.
+   - NAT Gateway for private subnet outbound connectivity.
+2. **Security Groups:**
+   - Web Security Group for HTTP, HTTPS, and SSH access.
+   - Database Security Group allowing only web server connections.
+3. **Web Tier:**
+   - EC2 instance hosting Nginx and a PHP application.
+4. **Database Tier:**
+   - Amazon RDS MySQL instance for data storage.
+5. **Application Deployment:**
+   - PHP application connecting to the database for dynamic data processing.
 
 ---
 
-### **Step 2: Security Configuration**
-#### 2.1 Create Security Groups
-1. **Web Security Group**:
-   - Allow inbound:
-     - **HTTP (port 80)**: `0.0.0.0/0`.
-     - **HTTPS (port 443)**: `0.0.0.0/0`.
-     - **SSH (port 22)**: Restrict to your local machine’s IP.
-   - Allow outbound:
-     - **Database port** (3306 for MySQL or 5432 for PostgreSQL).
+## **Implementation Details**
 
-2. **Database Security Group**:
-   - Allow inbound:
-     - Only from the **Web Security Group** on database port (3306 or 5432).
-   - Allow outbound for software updates.
+### **VPC and Networking**
+A custom VPC was created with a CIDR block of `10.0.0.0/26` to serve as the networking backbone. Four subnets were configured:
+- **Public Subnets:** `10.0.0.0/28` and `10.0.0.16/28` for hosting web-tier resources.
+- **Private Subnets:** `10.0.0.32/28` and `10.0.0.48/28` for the database tier.
 
-**Screenshot Placeholder**: Add screenshots of the Security Groups configuration here.  
-`![Security Group Configuration Screenshot](./images/security-groups.png)`
+An Internet Gateway was attached to the VPC to allow Internet connectivity for resources in public subnets. A NAT Gateway was deployed in a public subnet to provide secure Internet access for resources in private subnets. The route tables were configured to route external traffic from public subnets through the Internet Gateway and traffic from private subnets through the NAT Gateway.
 
----
+*(Insert screenshot of VPC and subnets configuration here)*
 
-### **Step 3: Web Tier Deployment**
-#### 3.1 Launch an EC2 Instance
-1. In **EC2 Dashboard**, click **Launch Instance**.
-2. Configure:
-   - **AMI**: Ubuntu Server 22.04.
-   - **Instance Type**: t2.micro (free-tier eligible).
-   - **Subnet**: `Public-Subnet`.
-   - Assign a public IP.
-   - **Key Pair**: Skip if connecting without a key pair.
-3. Attach an **Elastic IP** for public reachability.
+### **Security Configuration**
+Two Security Groups were created to enforce strict access controls:
+1. **Web Security Group:**
+   - Allows inbound traffic on port 80 (HTTP) and 443 (HTTPS) from all sources.
+   - Allows SSH (port 22) from a trusted IP address.
+   - Allows outbound traffic to the database on port 3306 (MySQL).
+2. **Database Security Group:**
+   - Allows inbound traffic on port 3306 only from the Web Security Group.
+   - Allows outbound traffic for software updates.
 
-**Screenshot Placeholder**: Add a screenshot of the EC2 instance launch details here.  
-`![EC2 Launch Screenshot](./images/ec2-launch.png)`
+*(Insert screenshot of Security Group configuration here)*
 
-#### 3.2 Install Nginx and PHP
-1. Connect to the EC2 instance using SSH or EC2 Instance Connect.
-2. Update and install required software:
-   ```bash
-   sudo apt update
-   sudo apt install nginx php php-mysql -y
-   sudo systemctl start nginx
-   sudo systemctl enable nginx
-   ```
-3. Test Nginx by visiting `http://<Elastic-IP>` in your browser.
+### **Web Tier**
+An EC2 instance was deployed in one of the public subnets to serve as the web server. An Elastic IP was attached to the instance for consistent public reachability. Nginx was installed as the web server, and PHP was configured to host a sample application. The PHP application connects to the RDS database to perform basic data operations.
 
-**Screenshot Placeholder**: Add a screenshot of the Nginx welcome page here.  
-`![Nginx Test Screenshot](./images/nginx-test.png)`
 
-#### 3.3 Deploy PHP Application
-1. Create a PHP file:
-   ```bash
-   sudo nano /var/www/html/index.php
-   ```
-2. Add the following code to connect to RDS:
-   ```php
-   <?php
-   $conn = new mysqli("your-rds-endpoint", "admin", "yourpassword", "webapp");
-   if ($conn->connect_error) {
-       die("Connection failed: " . $conn->connect_error);
-   }
-   echo "Connected successfully!";
-   ?>
-   ```
-3. Save the file and test it at `http://<Elastic-IP>/index.php`.
 
-**Screenshot Placeholder**: Add a screenshot of the PHP connection test here.  
-`![PHP Connection Test Screenshot](./images/php-test.png)`
+*(Insert screenshot of EC2 instance configuration here)*
+
+### **Database Tier**
+An Amazon RDS MySQL instance was deployed in the private subnets. Multi-AZ deployment was enabled for high availability, and public access was disabled to ensure security. The database accepts connections only from the Web Security Group. A sample database (`webapp`) and table (`users`) were created for testing purposes.
+
+*(Insert screenshot of RDS instance configuration here)*
+
+### **Application Deployment**
+A PHP application was deployed on the web server to connect to the RDS database. Below is the PHP script used:
+
+```php
+<?php
+$conn = new mysqli("your-rds-endpoint", "admin", "yourpassword", "webapp");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully!";
+?>
+```
+
+This script was saved in `/var/www/html/index.php` and tested by accessing the public IP address of the web server.
+
+*(Insert screenshot of application output here)*
 
 ---
 
-### **Step 4: Database Tier Deployment**
-#### 4.1 Create an RDS MySQL Database
-1. Go to the **RDS Dashboard**.
-2. Click **Create Database** and configure:
-   - **Engine**: MySQL 8.0.
-   - **Instance Class**: db.t3.micro.
-   - **Storage**: 20 GB.
-   - Enable **Multi-AZ Deployment**.
-   - Disable **Public Access**.
-3. Assign the **Database Security Group** to this instance.
+## **Testing and Validation**
+- Verified that the web server is publicly accessible via HTTP/HTTPS.
+- Tested the database connectivity using the PHP application.
+- Ensured secure communication between the web tier and database tier.
 
-**Screenshot Placeholder**: Add a screenshot of the RDS instance configuration here.  
-`![RDS Instance Screenshot](./images/rds-instance.png)`
-
-#### 4.2 Initialize the Database
-1. Connect to the RDS instance from the EC2 server:
-   ```bash
-   mysql -h <RDS-ENDPOINT> -u admin -p
-   ```
-2. Create a database and table:
-   ```sql
-   CREATE DATABASE webapp;
-   USE webapp;
-   CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(50));
-   INSERT INTO users VALUES (1, 'Cloud Engineer');
-   ```
-
-**Screenshot Placeholder**: Add a screenshot of database initialization commands here.  
-`![Database Initialization Screenshot](./images/database-init.png)`
+*(Insert screenshots of test results here)*
 
 ---
 
-### **Step 5: Testing and Verification**
-1. Open `http://<Elastic-IP>/index.php` in your browser.
-2. If configured correctly, you should see **Connected successfully!**.
-3. Verify the database connection by querying the `users` table.
+## **Conclusion**
+This project demonstrates the deployment of a scalable and secure 2-tier architecture in AWS, incorporating best practices for high availability, fault tolerance, and security. The architecture ensures seamless integration between the web and database tiers, providing a robust environment for hosting applications.
 
-**Screenshot Placeholder**: Add a screenshot of the final test result here.  
-`![Final Test Screenshot](./images/final-test.png)`
