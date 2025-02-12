@@ -67,8 +67,10 @@ An Internet Gateway was attached to the VPC to allow Internet connectivity for r
 1. Create an **Internet Gateway** in the **VPC Dashboard**.
 2. Attach the IGW to your VPC.
 
-![](https://...Dark.png)  |  ![](https://...Ocean.png)
-Solarized dark             |  Solarized Ocean
+IGW Creation             |  Attching to VPC
+:-------------------------:|:-------------------------:
+![IGW Creation](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/IGW%20retatin.PNG)  |  ![Attching to VPC](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/attching%20igw%20to%20vpc.PNG)
+
 #### Configure Route Tables
 1. **Public Route Table**:
    - Associate the public subnet with this route table.
