@@ -58,7 +58,7 @@ An Internet Gateway was attached to the VPC to allow Internet connectivity for r
 2. Create a **Private Subnet**:
    - **Name**: `Private-Subnet`.
    - **Availability Zone**: `us-east-1b`.
-   - **CIDR Block**: `10.0.0.16/28`.
+   - **CIDR Block**: `10.0.0.32/28`.
 
 ![Private Subnet Configuration](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/private%20sub%201.PNG)
 *Private Subnet Configuration.*
