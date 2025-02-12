@@ -67,9 +67,8 @@ An Internet Gateway was attached to the VPC to allow Internet connectivity for r
 1. Create an **Internet Gateway** in the **VPC Dashboard**.
 2. Attach the IGW to your VPC.
 
-**Screenshot Placeholder**: Add a screenshot of the IGW attachment here.  
-`![Internet Gateway Attachment Screenshot](./images/internet-gateway.png)`
-
+![](https://...Dark.png)  |  ![](https://...Ocean.png)
+Solarized dark             |  Solarized Ocean
 #### Configure Route Tables
 1. **Public Route Table**:
    - Associate the public subnet with this route table.
