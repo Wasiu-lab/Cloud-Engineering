@@ -75,12 +75,18 @@ IGW Creation             |  Attching to VPC
 1. **Public Route Table**:
    - Associate the public subnet with this route table.
    - Add a route for `0.0.0.0/0` pointing to the Internet Gateway.
+
+Public Route Table Creation             |  Subnet Association
+:-------------------------:|:-------------------------:
+![Public-Subnet Creation](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/public%20sub%20route%20table.PNG)  |  ![Subnet Association](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/public%20subnet%20asssociation.PNG)
+
 2. **Private Route Table**:
    - Associate the private subnet with this route table.
    - Add a route for `0.0.0.0/0` pointing to a **NAT Gateway**.
-
-**Screenshot Placeholder**: Add screenshots of public and private route table configurations here.  
-`![Route Table Configuration Screenshot](./images/route-tables.png)`
+     
+Private Route Table Creation             |  Subnet Association
+:-------------------------:|:-------------------------:
+![Private Route Table Creation](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/Private%20sub%20route%20table.PNG)  |  ![Subnet Association](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/Privtae%20subnet%20asssociation.PNG)
 
 #### Create a NAT Gateway
 1. In **NAT Gateways**, create a NAT Gateway in the **Public Subnet**.
