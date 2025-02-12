@@ -35,13 +35,15 @@ The goal of this project is to design, configure, and deploy a 2-tier architectu
 ## **Implementation Details**
 
 ### **1. VPC and Networking**
+
+![VPC configuration](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/Vpc%20creation.PNG)
+*VPC configuration.*
+
 A custom VPC was created with a CIDR block of `10.0.0.0/26` to serve as the networking backbone. Four subnets were configured:
 - **Public Subnets:** `10.0.0.0/28` and `10.0.0.16/28` for hosting web-tier resources.
 - **Private Subnets:** `10.0.0.32/28` and `10.0.0.48/28` for the database tier.
-
+  
 An Internet Gateway was attached to the VPC to allow Internet connectivity for resources in public subnets. A NAT Gateway was deployed in a public subnet to provide secure Internet access for resources in private subnets. The route tables were configured to route external traffic from public subnets through the Internet Gateway and traffic from private subnets through the NAT Gateway. Route for `0.0.0.0/0` pointing to the Internet Gateway for the public route table while another route `0.0.0.0/0` pointing to a NAT Gateway for the private route table.
-
-*(Insert screenshot of VPC and subnets configuration here)*
 
 #### Create Subnets
 1. Create a **Public Subnet**:
@@ -49,13 +51,17 @@ An Internet Gateway was attached to the VPC to allow Internet connectivity for r
    - **Availability Zone**: `us-east-1a`.
    - **CIDR Block**: `10.0.0.0/28`.
    - Enable **Auto-assign Public IP**.
+
+![Public Subnet Configuration](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/pub%20sub%201.PNG)
+*Public Subnet Configuration.* 
+
 2. Create a **Private Subnet**:
    - **Name**: `Private-Subnet`.
    - **Availability Zone**: `us-east-1b`.
    - **CIDR Block**: `10.0.0.16/28`.
 
-**Screenshot Placeholder**: Add a screenshot of subnet creation here.  
-`![Subnet Creation Screenshot](./images/subnet-creation.png)`
+![Private Subnet Configuration](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/private%20sub%201.PNG)
+*Private Subnet Configuration.*
 
 #### Attach an Internet Gateway
 1. Create an **Internet Gateway** in the **VPC Dashboard**.
