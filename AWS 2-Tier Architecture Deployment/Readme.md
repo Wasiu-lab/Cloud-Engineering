@@ -90,11 +90,14 @@ Private Route Table Creation             |  Subnet Association
 
 #### Create a NAT Gateway
 1. In **NAT Gateways**, create a NAT Gateway in the **Public Subnet**.
-2. Allocate an Elastic IP for the NAT Gateway.
-3. Ensure the private route table uses this NAT Gateway for internet-bound traffic.
+2. Attach it to the public subnet 
+3. Allocate an Elastic IP for the NAT Gateway.
+4. Ensure the private route table uses this NAT Gateway for internet-bound traffic.
 
-**Screenshot Placeholder**: Add a screenshot of the NAT Gateway setup here.  
-`![NAT Gateway Setup Screenshot](./images/nat-gateway.png)`
+Nat Gatewau Creation             |  Attaching it to the private route table
+:-------------------------:|:-------------------------:
+![Nat Gatewau Creation](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/nat%20gateway%20creation.PNG)  |  ![Attaching it](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%202-Tier%20Architecture%20Deployment/AWS/Nat%20gateway%20routing%20to%20pivate%20subnet.PNG)
+
 
 ### **2. Security Configuration**
 Two Security Groups were created to enforce strict access controls:
