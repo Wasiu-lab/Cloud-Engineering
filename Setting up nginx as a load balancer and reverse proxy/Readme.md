@@ -1,7 +1,10 @@
 # Setting Up NGINX as a Load Balancer and Reverse Proxy
 
 ## Introduction
-NGINX is a powerful web server that can be used as a **reverse proxy** and **load balancer** to distribute traffic across multiple backend servers. In this guide, we will set up NGINX on **Ubuntu**, configure it to serve two different websites, and implement a **load balancer** to manage traffic efficiently.
+NGINX is a powerful web server that can be used as a **reverse proxy** and **load balancer** to distribute traffic across multiple backend servers. The aim of this documentation will set up NGINX on **Ubuntu**, configure it to serve two different websites, and implement a **load balancer** to manage traffic efficiently.
+
+## Load Balancer 
+Load balancing is the method of distributing network traffic equally across a pool of resources that support an application which the tool used for load balancing is a **Load Balancer**
 
 ## Prerequisites
 Ensure you have the following before proceeding:
