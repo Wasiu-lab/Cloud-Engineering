@@ -6,6 +6,12 @@ NGINX is a powerful web server that can be used as a **reverse proxy** and **loa
 ## Load Balancer 
 Load balancing is the method of distributing network traffic equally across a pool of resources that support an application which the tool used for load balancing is a **Load Balancer**
 
+## **Project Overview**
+The aim of the project is to host two website running on nginx with both will have individual customized IP address whiCh wilL be ```127.0.0.1:90```  and ```127.0.0.1:95```. After hosting the site, we will set up a load balancer which will run on the webserver localhost port ```127.0.0.1:80``` which will also serve as a reverse proxy so that refreshing the locahost will switch between both websites that has been setup on the nginx webserver.
+Site 1             |  Site 2
+:-------------------------:|:-------------------------:
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/site%201.PNG)  |  ![Site](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/site%202.PNG)
+
 ## Prerequisites
 Ensure you have the following before proceeding:
 - An **Ubuntu** system
@@ -18,25 +24,30 @@ First, update your package lists and install NGINX using the following command:
 sudo apt update
 sudo apt install nginx -y
 ```
+![NGINX welcome page](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/installing%20nginx.PNG)
 
 After installation, check if NGINX is running by accessing **localhost**:
 ```bash
 http://127.0.0.1:80
 ```
 _NGINX default welcome page should be visible._  
-**📌 [Insert an image of the NGINX welcome page]**
+![NGINX welcome page](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/nginx%20working.PNG)
 
 ## Step 2: Download and Extract Website Files
 We need two different websites to serve. Download them using `wget`:
 ```bash
-sudo wget [Website 1 URL]
-sudo wget [Website 2 URL]
+sudo wget https://github.com/startbootstrap/startbootstrap-agency/archive/gh-pages.zip 
+sudo wget https://github.com/startbootstrap/startbootstrap-grayscale/archive/gh-pages.zip
 ```
+
 Extract them after downloading:
 ```bash
-sudo unzip website1.zip
-sudo unzip website2.zip
+sudo unzip gh-pages.zip
+sudo unzip gh-pages.zip.1
 ```
+   
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/site%201%20downbload.PNG) 
+**Download and Extract Website**
 
 ## Step 3: Organize Website Files in `/var/www`
 Navigate to the NGINX web root directory:
@@ -48,11 +59,22 @@ Create separate directories for the two websites:
 sudo mkdir site1
 sudo mkdir site2
 ```
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/creating%20folder%20for%20site%201%20n%202%20IN%20VAR.PNG) 
+
+Folder creation in the var/www directory
+
 Move the extracted website files into the respective folders:
 ```bash
-sudo mv /path/to/website1/* /var/www/site1
-sudo mv /path/to/website2/* /var/www/site2
+sudo mv startbootstrap-agency-gh-pages/* /var/www/site1
+sudo mv startbootstrap-grayscale-gh-pages/* /var/www/site2
 ```
+then using the tree function to confirm if the file movement was sucsseful or not 
+```bash
+tree
+```
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/using%20the%20tree%20function%20to%20confirm%20file%20movement.PNG) 
+
+Confirmation of website files movemnt into the respective folders 
 
 ## Step 4: Configure NGINX for Both Websites
 Navigate to the NGINX configuration directory:
@@ -63,51 +85,49 @@ By default, you will find a file named `default`. We will create two separate co
 
 Create a new configuration file for **Site 1**:
 ```bash
-sudo nano /etc/nginx/sites-available/site1
+sudo nano /etc/nginx/sites-enabled/site1
 ```
 Paste the following configuration:
 ```nginx
 server {
-    listen 90;
-    listen [::]:90;
-    server_name site1.local;
+       listen 90;
+       #listen [::]:81;
 
-    root /var/www/site1;
-    index index.html;
+       server_name site1.com;
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
+       root /var/www/site1;
+       index index.html;
+
+       location / {
+               try_files $uri $uri/ =404;
+       }
 }
 ```
 Save and exit (`CTRL + X`, then `Y`, then `ENTER`).
 
 Now, create another configuration file for **Site 2**:
 ```bash
-sudo nano /etc/nginx/sites-available/site2
+sudo nano /etc/nginx/sites-enabled/site2
 ```
 Paste this configuration:
 ```nginx
 server {
-    listen 95;
-    listen [::]:95;
-    server_name site2.local;
+       listen 95;
+       #listen [::]:81;
 
-    root /var/www/site2;
-    index index.html;
+       server_name site2.com;
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
+       root /var/www/site2;
+       index index.html;
+
+       location / {
+               try_files $uri $uri/ =404;
+       }
 }
 ```
 Save and exit.
 
-Enable both sites by creating symbolic links:
-```bash
-sudo ln -s /etc/nginx/sites-available/site1 /etc/nginx/sites-enabled/
-sudo ln -s /etc/nginx/sites-available/site2 /etc/nginx/sites-enabled/
-```
+
 Restart NGINX for changes to take effect:
 ```bash
 sudo systemctl restart nginx
