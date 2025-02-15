@@ -83,7 +83,11 @@ cd /etc/nginx/sites-enabled
 ```
 By default, you will find a file named `default`. We will create two separate configuration files for our websites.
 
-Create a new configuration file for **Site 1**:
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/creating%20config%20file%20for%20site%201%20and%202.PNG)
+
+**Configuration file for both site**
+
+***Create a new configuration file for **Site 1**:***
 ```bash
 sudo nano /etc/nginx/sites-enabled/site1
 ```
@@ -127,16 +131,24 @@ server {
 ```
 Save and exit.
 
-
 Restart NGINX for changes to take effect:
 ```bash
 sudo systemctl restart nginx
 ```
+Test if the configureation file are correctly configured 
+```bash
+nginx t
+```
+
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/checking%20if%20config%20for%20site%20available%20is%20working%20well.PNG)
+
 Now, test if both websites are accessible by visiting:
 - **Site 1** → `http://127.0.0.1:90`
 - **Site 2** → `http://127.0.0.1:95`
-
-**📌 [Insert screenshots of both websites running]**
+  
+Site 1             |  Site 2
+:-------------------------:|:-------------------------:
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/site%201%20working.PNG)  |  ![Site](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Setting%20up%20nginx%20as%20a%20load%20balancer%20and%20reverse%20proxy/Pictures/site%202%20working.PNG)
 
 ## Step 5: Configure NGINX as a Load Balancer
 Now, we will set up NGINX to distribute traffic between the two websites.
@@ -193,11 +205,6 @@ We have successfully configured **NGINX as a Load Balancer and Reverse Proxy**. 
   ```bash
   sudo nginx -t
   ```
-
-### Next Steps
-- Secure your NGINX setup with **SSL/TLS**.
-- Configure **NGINX caching** for better performance.
-- Implement **rate limiting** and **firewall rules** for security.
 
 ---
 🚀 *Happy Hosting with NGINX!*
