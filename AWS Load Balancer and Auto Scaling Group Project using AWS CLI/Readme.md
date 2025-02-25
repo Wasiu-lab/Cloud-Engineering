@@ -53,7 +53,9 @@ This project demonstrates how to create a highly available web application using
 - `src/create_alb.sh`: Script to create Application Load Balancer.
 - `src/create_launch_template.sh`: Script to create launch template for EC2 instances.
 - `src/create_asg.sh`: Script to create Auto Scaling Group.
-- `src/user_data.sh`: User data script for EC2 instance configuration. 
+- `src/user_data.sh`: User data script for EC2 instance configuration.
+- `src/instance_count.sh`: Retrieve the count of running instances in the Auto Scaling Group (ASG), terminate one instance, monitor until a replacement is launched, and display the updated instance count.
+- `src/delete.sh`: delete the entire setup and configuration via AWS CLI. 
 
 ## Git Ignore
 - The `.gitignore` file specifies files and directories to be ignored by Git, including logs and temporary files.
