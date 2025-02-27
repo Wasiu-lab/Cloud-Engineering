@@ -40,7 +40,11 @@ This project demonstrates how to create a highly available web application using
 
 ### Step 6: Test the Load Balancer
 - Copy the ALB DNS name and open it in a web browser. You should see the message: "Welcome to My Load Balanced App".
-- Terminate one instance to observe the ASG automatically replacing it.
+  Use the code to get the DNS name ```aws elbv2 describe-load-balancers --query "LoadBalancers[*].[LoadBalancerName, DNSName]" --output table```
+- Terminate one instance to observe the ASG automatically replacing it, This can be done by runnign the `instance_count.sh` script. It will count the instance running then terminate one and after ASG create another, It will give the current coount.
+
+### Step 7: Terminate the services created
+- Run the script `src/delete.sh` to terminate the entire service created and confirm on the AWS console if all the services have being terminated
 
 ## Key Learnings from This Project
 - Achieved high availability using Load Balancer and Auto Scaling Group.
