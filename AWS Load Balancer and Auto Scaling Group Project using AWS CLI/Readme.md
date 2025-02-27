@@ -3,7 +3,10 @@
 ## Project Overview
 This project demonstrates how to create a highly available web application using AWS services. It utilizes an Elastic Load Balancer (ELB) to distribute incoming traffic and an Auto Scaling Group (ASG) to manage EC2 instances dynamically. The architecture includes a Launch Template for defining EC2 configurations and a Target Group for registering instances.
 
-## Project Architecture
+## **Project Architecture**
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/Archi%20diagram.png) 
+*High-Level Architecture Diagram.*
+
 1. **VPC**: A Virtual Private Cloud (VPC) with public and private subnets.
 2. **Application Load Balancer (ALB)**: Deployed in the public subnet to handle incoming traffic.
 3. **Auto Scaling Group (ASG)**: Located in the private subnet, managing EC2 instances.
