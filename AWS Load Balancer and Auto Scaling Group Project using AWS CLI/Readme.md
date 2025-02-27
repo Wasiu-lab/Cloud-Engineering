@@ -5,6 +5,7 @@ This project demonstrates how to create a highly available web application using
 
 ## **Project Architecture**
 ![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/Archi%20diagram.png) 
+
 *High-Level Architecture Diagram.*
 
 1. **VPC**: A Virtual Private Cloud (VPC) with public and private subnets.
@@ -17,14 +18,29 @@ This project demonstrates how to create a highly available web application using
 
 ### Step 1: Create a VPC and Subnets
 - Execute the script `src/create_vpc_and_subnets.sh` to create a VPC with two public subnets and two private subnets.
+  
+![Site1](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/vpc.PNG)
+
+VPC Initiation
+
+![Site](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/vpc%202.PNG)
+
+VPC Completion
 
 ### Step 2: Create a Security Group
 - Run the script `src/create_security_group.sh` to create a security group that allows:
   - HTTP (port 80) from 0.0.0.0/0
   - SSH (port 22) from your specific IP address
 
+![Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/sg.PNG) 
+
+*Security Group Creation.*
+
 ### Step 3: Create an Application Load Balancer (ALB)
 - Use the script `src/create_alb.sh` to create an ALB in the public subnet and set up a target group (e.g., `my-target-group`) for registering instances with HTTP protocol.
+![Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/alb.PNG) 
+
+*Application Load Balancer (ALB).*
 
 ### Step 4: Create a Launch Template
 - Execute `src/create_launch_template.sh` to create a launch template specifying:
@@ -33,6 +49,10 @@ This project demonstrates how to create a highly available web application using
   - User Data script located in `src/user_data.sh` to install and configure the web server.
   - Kindly use ```pwd``` to get the path and correct the path in the `user_data.sh` script
 
+![Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/lunch%20template.PNG) 
+
+*Launch Template Creation Diagram.*
+
 ### Step 5: Create an Auto Scaling Group (ASG)
 - Run the script `src/create_asg.sh` to create an ASG in the private subnet, attaching the launch template and target group. Configure the ASG with:
   - Minimum instances: 2
@@ -40,6 +60,10 @@ This project demonstrates how to create a highly available web application using
   - Scaling policies based on CPU utilization.
   - TARGET_GROUP_ARN: The below prompt wil give the value needed to run the TARGET_GROUP_ARN
     ```aws elbv2 describe-target-groups --query "TargetGroups[*].TargetGroupArn" --output text```
+    
+![Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20Load%20Balancer%20and%20Auto%20Scaling%20Group%20Project%20using%20AWS%20CLI/Pictures/asg.PNG) 
+
+*Auto Scaling Group (ASG) Creation.*
 
 ### Step 6: Test the Load Balancer
 - Copy the ALB DNS name and open it in a web browser. You should see the message: "Welcome to My Load Balanced App".
