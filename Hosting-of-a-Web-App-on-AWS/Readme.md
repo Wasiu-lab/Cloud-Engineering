@@ -12,6 +12,114 @@ This project is a full-stack web application built using React js for the fronte
 #### Authors
 ![Dashboard](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/authors.png)
 
+# 3-Tier Production-Grade Architecture Deployment
+
+## Overview
+This project demonstrates a **highly available**, **scalable**, and **secure** deployment of a **React.js frontend** and **Node.js backend** application using AWS cloud services. The architecture follows a **3-tier deployment model**, consisting of:
+
+- **Presentation Tier**: React.js hosted on EC2 with Nginx and Load Balancer
+- **Application Tier**: Node.js backend with PM2 running in private subnets
+- **Data Tier**: RDS MySQL database with multi-AZ deployment for high availability
+
+## Architecture Diagram
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/3-tier%20Production-Grade%20Architecture.drawio.png)
+
+---
+
+## Technologies Used
+- **AWS Services**: EC2, RDS (MySQL), CloudFront, Route 53, ACM, VPC, Load Balancers (ALB), Auto Scaling Groups, Security Groups, CloudWatch
+- **Frontend**: React.js, Nginx
+- **Backend**: Node.js, PM2
+- **Infrastructure as Code**: Bash scripts for automation
+- **Database**: AWS RDS MySQL (Primary & Standby Replication)
+
+## Project Setup and Implementation Steps
+
+### 1. Configuring Route 53 for Domain Management
+- Create a **public hosted zone** in **Route 53**.
+- Update the **name servers** in your domain registrar.
+- Ensure domain traffic is properly routed.
+
+### 2. Requesting an SSL Certificate from ACM
+- Generate a **public SSL certificate** using **AWS Certificate Manager (ACM)**.
+- Validate ownership via DNS records in **Route 53**.
+- Enables **HTTPS** for secure traffic.
+
+### 3. VPC and Subnet Configuration
+- Create a **VPC with multiple subnets**:
+  - **Public subnets**: For the frontend and bastion host.
+  - **Private subnets**: For backend EC2 instances and database.
+
+### 4. Setting Up Security Groups
+Define security groups for controlled communication:
+- **Bastion Host SG**: Allows SSH access.
+- **Presentation Tier SG**: Allows HTTP traffic from Load Balancer.
+- **Application Tier SG**: Allows Node.js traffic.
+- **Database Tier SG**: Allows MySQL access from application instances.
+
+### 5. Launching the Bastion Host
+- Deploy an **Amazon Linux EC2 instance**.
+- Configure a **key pair for SSH access**.
+- Restrict access to only your IP.
+
+### 6. Deploying the Database Tier (RDS MySQL)
+- Create a **DB subnet group**.
+- Set up a **multi-AZ MySQL database**.
+- Enable **automatic backups** and **high availability**.
+- Configure **SSH tunneling** for database access.
+
+### 7. Configuring the Presentation Tier (Frontend)
+- Create a **Launch Template** for EC2 frontend instances.
+- Deploy a **React.js app** with **Nginx**.
+- Use an **Application Load Balancer (ALB)** to distribute traffic.
+- Configure an **Auto Scaling Group (ASG)** for automatic scaling.
+
+### 8. Configuring the Application Tier (Backend)
+- Create a **Launch Template** for backend EC2 instances.
+- Deploy **Node.js with PM2** for process management.
+- Use an **Application Load Balancer** for API requests.
+- Configure an **Auto Scaling Group**.
+
+### 9. Implementing Auto Scaling
+- Set up **CloudWatch Alarms** for CPU usage.
+- Automatically **scale up/down EC2 instances** based on demand.
+- Use **stress testing** to validate autoscaling.
+
+### 10. Integrating CloudWatch Logs
+- Create **log groups** in CloudWatch.
+- Attach **IAM roles** to EC2 instances for log streaming.
+- Monitor logs in **CloudWatch Logs**.
+
+### 11. Setting Up CloudFront for Content Delivery
+- Configure **CloudFront Distribution** for caching and performance.
+- Set the **origin** as the **ALB** for the frontend.
+- Enforce **HTTPS redirection**.
+
+### 12. Configuring DNS Records in Route 53
+- Create **alias records** for CloudFront.
+- Ensure domain traffic is properly routed to the CloudFront distribution.
+
+---
+
+## Source Code
+The source code used for deploying this infrastructure are available in the GitHub repository. Each script is documented with inline comments for clarity.
+
+**Source Code**: [GitHub Link](#)
+---
+
+## Testing & Validation
+- **Stress test the autoscaling feature** by artificially increasing CPU load.
+- **Check ALB health checks** to ensure smooth traffic routing.
+- **Monitor logs in CloudWatch** for debugging.
+
+---
+
+## Screenshots
+_(Add images of implementation steps, such as EC2 setup, RDS creation, ALB configurations, etc.)_
+
+---
+
+
 
 ## Connecting to private EC2 instance via a bastion host
 1. To change the ssh key permission:
@@ -479,3 +587,6 @@ EOL
 # Restart NGINX to apply the new configuration
 sudo systemctl restart nginx
 ```
+
+## Conclusion
+This project successfully demonstrates a **scalable, highly available, and secure** deployment of a React.js and Node.js application in AWS using DevOps best practices. By leveraging **load balancers, auto-scaling groups, and CloudFront**, the application can handle increased traffic efficiently while maintaining **high availability** and **performance**.
