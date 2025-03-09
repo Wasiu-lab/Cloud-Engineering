@@ -1,39 +1,3 @@
-# Production-Grade 3-Tier Architecture on AWS
-
-This project demonstrates the deployment of a production-grade, 3-tier architecture to host and scale a React.js and Node.js application on AWS. The architecture is designed for high availability, fault tolerance, and scalability across multiple availability zones.
-
-![AWS 3-Tier Architecture Diagram](https://placeholder-for-your-architecture-diagram.png)
-
-## Architecture Overview
-
-The architecture consists of three distinct tiers:
-
-### 🔹 Presentation Tier
-A highly scalable front-end environment using EC2 instances with Nginx to serve a React.js application. CloudFront provides fast, reliable, and secure content delivery to users globally with HTTPS support, leveraging edge locations to optimize load times.
-
-### 🔹 Application Tier
-A robust and resilient back-end system using Node.js on EC2 instances managed by PM2. Auto Scaling Groups dynamically adjust based on traffic demands, while an Application Load Balancer efficiently distributes requests. CloudWatch provides real-time monitoring and logging for proactive system management.
-
-### 🔹 Data Tier
-A highly available RDS MySQL database that ensures data redundancy and reliability across multiple availability zones, with automated backups and failover support.
-
-## Resources Used
-
-1. **VPC** with 1 public and 2 private subnets across 2 availability zones
-2. **Internet Gateway** for communication between VPC instances and the Internet
-3. **Security Groups** for firewall protection
-4. **NAT Gateway** enabling private instances to access the internet
-5. **Bastion Host** as a control entry point to the private network
-6. **EC2 Instances** for hosting the web applications
-7. **Application Load Balancers** to distribute traffic across Auto Scaling Groups
-8. **Auto Scaling Groups** for dynamic EC2 instance creation ensuring high availability
-9. **RDS MySQL** for the database tier with multi-AZ deployment
-10. **Route 53** for domain registration and DNS record management
-11. **AWS Certificate Manager** for SSL/TLS certificates
-12. **CloudFront** for global content delivery
-13. **CloudWatch** for centralized logging, monitoring, and alarms
-14. **GitHub** for source code management
-
 ## Implementation Steps
 
 ### 1. Networking Setup
