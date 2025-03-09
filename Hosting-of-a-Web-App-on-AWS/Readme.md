@@ -57,34 +57,82 @@ A highly available RDS MySQL database that ensures data redundancy and reliabili
 - Create a **public hosted zone** in **Route 53**.
 - Update the **name servers** in your domain registrar.
 - Ensure domain traffic is properly routed.
+  
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/creating%20a%20hosted%20zone.PNG)
 
 ### 2. Requesting an SSL Certificate from ACM
 - Generate a **public SSL certificate** using **AWS Certificate Manager (ACM)**.
 - Validate ownership via DNS records in **Route 53**.
 - Enables **HTTPS** for secure traffic.
+  
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/certificat%20request.PNG)
 
 ### 3. VPC and Subnet Configuration
 - Create a **VPC with multiple subnets**:
-  - **Public subnets**: For the frontend and bastion host.
-  - **Private subnets**: For backend EC2 instances and database.
+- **Public subnets**: For the frontend and bastion host.
+- **Private subnets**: For backend EC2 instances and database.
+  
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/VPC%20workflow.PNG)
 
 ### 4. Setting Up Security Groups
-Define security groups for controlled communication:
-- **Bastion Host SG**: Allows SSH access.
-- **Presentation Tier SG**: Allows HTTP traffic from Load Balancer.
-- **Application Tier SG**: Allows Node.js traffic.
-- **Database Tier SG**: Allows MySQL access from application instances.
+Created the following security groups:
+
+**Bastion Host SG:**
+- Inbound: SSH (port 22) from any IP address
+- Outbound: All traffic
+
+**Presentation Tier Load Balancer SG:**
+- Inbound: HTTP (port 80) from any IP address
+- Outbound: All traffic
+
+**Presentation Tier EC2 SG:**
+- Inbound: SSH (port 22) from Bastion Host SG
+- Inbound: HTTP (port 80) from Presentation Tier ALB SG
+- Outbound: All traffic
+
+**Application Tier Load Balancer SG:**
+- Inbound: HTTP traffic from Presentation Tier EC2 SG
+- Outbound: All traffic
+
+**Application Tier EC2 SG:**
+- Inbound: SSH (port 22) from Bastion Host SG
+- Inbound: TCP (port 3200) from Application Tier ALB SG
+- Outbound: All traffic
+
+**Data Tier SG:**
+- Inbound: MySQL (port 3306) from Bastion Host SG
+- Inbound: MySQL (port 3306) from Application Tier EC2 SG
+- Outbound: All traffic
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/All%20SG.PNG)
 
 ### 5. Launching the Bastion Host
-- Deploy an **Amazon Linux EC2 instance**.
+- Launched an EC2 instance with Amazon Linux 2023 AMI in a public subnet
 - Configure a **key pair for SSH access**.
-- Restrict access to only your IP.
+- Associated the Bastion Host Security Group
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/bastion%20host%20setup.PNG)
 
 ### 6. Deploying the Database Tier (RDS MySQL)
-- Create a **DB subnet group**.
-- Set up a **multi-AZ MySQL database**.
-- Enable **automatic backups** and **high availability**.
-- Configure **SSH tunneling** for database access.
+
+#### 6.1 DB Subnet Group Creation
+- Created a DB subnet group spanning multiple availability zones for resilience
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/creating%20db%20subnet.PNG)
+
+#### 6.2 RDS MySQL Instance Deployment
+- Deployed a multi-AZ MySQL database for high availability
+- Configured automated backups and maintenance windows
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/db%20created.PNG)
+
+#### 6.3 Database Initialization
+- Connected to the RDS instance via SSH tunnel through the Bastion Host
+- Connect to mysql workbench using the Host, Port, Username, and the password created
+- Created a dedicated database user for application access
+- Loaded initial schema and data
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/conneced%20to%20mysql%20to%20load%20data.PNG)
 
 ### 7. Configuring the Presentation Tier (Frontend)
 - Create a **Launch Template** for EC2 frontend instances.
@@ -92,11 +140,16 @@ Define security groups for controlled communication:
 - Use an **Application Load Balancer (ALB)** to distribute traffic.
 - Configure an **Auto Scaling Group (ASG)** for automatic scaling.
 
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/Instance%20runnign%20with%20ALB%20and%20ASG.PNG)
+
 ### 8. Configuring the Application Tier (Backend)
 - Create a **Launch Template** for backend EC2 instances.
 - Deploy **Node.js with PM2** for process management.
 - Use an **Application Load Balancer** for API requests.
 - Configure an **Auto Scaling Group**.
+- Connect to the private subnet that the Application Tier is running and check the state of the PM2 managing the Node.js
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/connect%20to%20the%20application%20instance%20and%20checking%20pms%202%20logs.PNG)
 
 ### 9. Implementing Auto Scaling
 - Set up **CloudWatch Alarms** for CPU usage.
@@ -108,21 +161,30 @@ Define security groups for controlled communication:
 - Attach **IAM roles** to EC2 instances for log streaming.
 - Monitor logs in **CloudWatch Logs**.
 
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/Alerm%20showin%20high%20cpu%20utilization.PNG)
+
 ### 11. Setting Up CloudFront for Content Delivery
-- Configure **CloudFront Distribution** for caching and performance.
-- Set the **origin** as the **ALB** for the frontend.
-- Enforce **HTTPS redirection**.
+- Created a CloudFront distribution with the Presentation Tier ALB as origin
+- Configured to use HTTPS with the ACM certificate
+- Set up proper cache behaviors
+- Enabled HTTP to HTTPS redirection
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/cloud%20fron%20distribution.PNG)
 
 ### 12. Configuring DNS Records in Route 53
-- Create **alias records** for CloudFront.
+- Created an alias record for the root domain pointing to the CloudFront distribution
+- Created an alias record for the www subdomain pointing to the CloudFront distribution
 - Ensure domain traffic is properly routed to the CloudFront distribution.
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/project%20complete.PNG)
 
 ---
 
 ## Source Code
 The source code used for deploying this infrastructure are available in the GitHub repository. Each script is documented with inline comments for clarity.
 
-**Source Code**: [GitHub Link](#)
+**Source Code**: [GitHub Link](https://github.com/Wasiu-lab/Dynamic-Web-Application-Souce-code)
+
 ---
 
 ## Testing & Validation
@@ -131,13 +193,6 @@ The source code used for deploying this infrastructure are available in the GitH
 - **Monitor logs in CloudWatch** for debugging.
 
 ---
-
-## Screenshots
-_(Add images of implementation steps, such as EC2 setup, RDS creation, ALB configurations, etc.)_
-
----
-
-
 
 ## Connecting to private EC2 instance via a bastion host
 1. To change the ssh key permission:
