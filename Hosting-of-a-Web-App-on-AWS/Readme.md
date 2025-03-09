@@ -14,24 +14,42 @@ This project is a full-stack web application built using React js for the fronte
 
 # 3-Tier Production-Grade Architecture Deployment
 
-## Overview
+## Architecture Overview
+
+![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/3-tier%20Production-Grade%20Architecture.drawio.png)
+
 This project demonstrates a **highly available**, **scalable**, and **secure** deployment of a **React.js frontend** and **Node.js backend** application using AWS cloud services. The architecture follows a **3-tier deployment model**, consisting of:
 
-- **Presentation Tier**: React.js hosted on EC2 with Nginx and Load Balancer
-- **Application Tier**: Node.js backend with PM2 running in private subnets
-- **Data Tier**: RDS MySQL database with multi-AZ deployment for high availability
+### 🔹 Presentation Tier
+A highly scalable front-end environment using EC2 instances with Nginx to serve a React.js application. CloudFront provides fast, reliable, and secure content delivery to users globally with HTTPS support, leveraging edge locations to optimize load times.
 
-## Architecture Diagram
-![Architecture Diagram](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/Hosting-of-a-Web-App-on-AWS/Pictures/3-tier%20Production-Grade%20Architecture.drawio.png)
+### 🔹 Application Tier
+A robust and resilient back-end system using Node.js on EC2 instances managed by PM2. Auto Scaling Groups dynamically adjust based on traffic demands, while an Application Load Balancer efficiently distributes requests. CloudWatch provides real-time monitoring and logging for proactive system management.
+
+### 🔹 Data Tier
+A highly available RDS MySQL database that ensures data redundancy and reliability across multiple availability zones, with automated backups and failover support.
 
 ---
 
 ## Technologies Used
-- **AWS Services**: EC2, RDS (MySQL), CloudFront, Route 53, ACM, VPC, Load Balancers (ALB), Auto Scaling Groups, Security Groups, CloudWatch
-- **Frontend**: React.js, Nginx
-- **Backend**: Node.js, PM2
-- **Infrastructure as Code**: Bash scripts for automation
-- **Database**: AWS RDS MySQL (Primary & Standby Replication)
+
+1. **VPC** with 1 public and 2 private subnets across 2 availability zones
+2. **Internet Gateway** for communication between VPC instances and the Internet
+3. **Security Groups** for firewall protection
+4. **NAT Gateway** enabling private instances to access the internet
+5. **Bastion Host** as a control entry point to the private network
+6. **EC2 Instances** for hosting the web applications
+7. **Application Load Balancers** to distribute traffic across Auto Scaling Groups
+8. **Auto Scaling Groups** for dynamic EC2 instance creation ensuring high availability
+9. **RDS MySQL** for the database tier with multi-AZ deployment
+10. **Route 53** for domain registration and DNS record management
+11. **AWS Certificate Manager** for SSL/TLS certificates
+12. **CloudFront** for global content delivery
+13. **CloudWatch** for centralized logging, monitoring, and alarms
+14. **GitHub** for source code management
+15. **Frontend (React.js, Nginx)**: Presentation Tier
+16. **Backend (Node.js, PM2)**: Application Tier
+17. **Infrastructure as Code**: Bash scripts for automation
 
 ## Project Setup and Implementation Steps
 
