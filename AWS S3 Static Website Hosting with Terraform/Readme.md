@@ -89,7 +89,7 @@ resource "aws_s3_bucket_public_access_block" "public" {
   depends_on = [aws_s3_bucket.Bucket]
 }
 
-resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+resource "aws_s3_bucket_policy" "allow_access" {
   bucket     = aws_s3_bucket.Bucket.id
   policy     = <<EOF
    {
@@ -168,7 +168,7 @@ resource "aws_s3_bucket_object" "files" {
 
 
 #Give public access to the bucket
-resource "aws_s3_bucket_public_access_block" "public" {
+resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket = aws_s3_bucket.Bucket.id
 
   block_public_acls       = false
@@ -179,7 +179,7 @@ resource "aws_s3_bucket_public_access_block" "public" {
   depends_on = [aws_s3_bucket.Bucket]
 }
 
-resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+resource "aws_s3_bucket_policy" "allow_access" {
   bucket     = aws_s3_bucket.Bucket.id
   policy     = <<EOF
    {
@@ -199,7 +199,7 @@ resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
     ]
 }
 EOF
-  depends_on = [aws_s3_bucket_public_access_block.public]
+  depends_on = [aws_s3_bucket_public_access_block.public_access]
 }
 
 output "bucket_info" {
