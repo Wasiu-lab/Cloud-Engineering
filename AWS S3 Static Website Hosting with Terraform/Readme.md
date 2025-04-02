@@ -78,7 +78,7 @@ After deployment, the files appear in the S3 bucket:
 To make the website publicly accessible, we need to configure the bucket's public access settings and attach a bucket policy:
 
 ```terraform
-resource "aws_s3_bucket_public_access_block" "public" {
+resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket = aws_s3_bucket.Bucket.id
 
   block_public_acls       = false
@@ -109,7 +109,7 @@ resource "aws_s3_bucket_policy" "allow_access" {
     ]
 }
 EOF
-  depends_on = [aws_s3_bucket_public_access_block.public]
+  depends_on = [aws_s3_bucket_public_access_block.public_access]
 }
 ```
 
