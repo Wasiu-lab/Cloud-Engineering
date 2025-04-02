@@ -11,20 +11,6 @@ Each project is organized into its own folder, containing:
 - **📊 Architecture Diagrams** – Visual representation of the cloud architecture.  
 - **📖 Documentation** – Setup instructions, dependencies, and usage details.  
 
-## 🚀 Projects  
-
-### **1. Project Name 1**  
-- **📌 Description:** Brief overview of the project.  
-- **🖥 Technologies Used:** (e.g., AWS EC2, S3, Lambda, Terraform, etc.)  
-- **🌟 Highlights:** Key features or achievements.  
-
-### **2. Project Name 2**  
-- **📌 Description:** Brief overview of the project.  
-- **🖥 Technologies Used:** (e.g., AWS VPC, RDS, CloudWatch, Kubernetes, etc.)  
-- **🌟 Highlights:** Key features or achievements.  
-
-_(More projects will be added as I complete them!)_  
-
 ## 🏗 Technologies and Tools  
 
 This repository highlights my proficiency in various AWS services and DevOps tools, including but not limited to:  
@@ -43,7 +29,6 @@ This repository highlights my proficiency in various AWS services and DevOps too
 
 ### **🚀 CI/CD & Automation:**  
 - AWS CodePipeline, CodeBuild, GitHub Actions, Jenkins  
-
 --
 This repository is a testament to my ability to design and implement robust AWS cloud solutions.  
 Feel free to explore my projects and provide feedback! 🚀
