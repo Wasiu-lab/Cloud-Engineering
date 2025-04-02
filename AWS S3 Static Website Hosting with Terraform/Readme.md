@@ -4,7 +4,7 @@ This project demonstrates how to deploy a static website on AWS S3 using Terrafo
 
 ## Architecture
 
-![AWS S3 Static Website Architecture](https://raw.githubusercontent.com/yourusername/your-repo/main/images/architecture.png)
+![AWS S3 Static Website Architecture](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20S3%20Static%20Website%20Hosting%20with%20Terraform/Website%20Files/startbootstrap-new-age-gh-pages/Pic/1_l75N_TSW6KwF1kWmU5PI6Q.PNG)
 
 The architecture consists of:
 - Terraform for Infrastructure as Code
@@ -39,7 +39,7 @@ This creates a bucket with:
 
 Here's how the bucket appears in the AWS Console after creation:
 
-![AWS S3 Bucket Creation](https://raw.githubusercontent.com/yourusername/your-repo/main/images/bucket-creation.png)
+![AWS S3 Bucket Creation](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20S3%20Static%20Website%20Hosting%20with%20Terraform/Website%20Files/startbootstrap-new-age-gh-pages/Pic/Screenshot%202025-04-02%20125924.png)
 
 ### 2. Uploading Website Content
 
@@ -71,7 +71,7 @@ This resource:
 
 After deployment, the files appear in the S3 bucket:
 
-![S3 Bucket Objects](https://raw.githubusercontent.com/yourusername/your-repo/main/images/bucket-objects.png)
+![S3 Bucket Objects](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20S3%20Static%20Website%20Hosting%20with%20Terraform/Website%20Files/startbootstrap-new-age-gh-pages/Pic/Screenshot%202025-04-02%20130103.png)
 
 ### 3. Configuring Public Access
 
@@ -130,7 +130,7 @@ output "bucket_info" {
 
 After applying the Terraform configuration, the website is accessible at the provided URL:
 
-![Deployed Website](https://raw.githubusercontent.com/yourusername/your-repo/main/images/website-screenshot.png)
+![Deployed Website](https://github.com/Wasiu-lab/Cloud-Engineering/blob/main/AWS%20S3%20Static%20Website%20Hosting%20with%20Terraform/Website%20Files/startbootstrap-new-age-gh-pages/Pic/Screenshot%202025-04-02%20125238.png)
 
 ## Complete Terraform Code
 
@@ -225,7 +225,7 @@ To use this project, you'll need:
    ```
 4. Apply the configuration:
    ```
-   terraform apply
+   terraform apply --auto-approve
    ```
 5. Access your website using the URL from the output
 
@@ -233,4 +233,3 @@ To use this project, you'll need:
 
 - This example uses a Bootstrap template, but you can use any static website files
 - Remember that S3 website URLs are in the format: `http://bucket-name.s3-website-region.amazonaws.com`
-- For production environments, consider adding CloudFront distribution for better performance and HTTPS
