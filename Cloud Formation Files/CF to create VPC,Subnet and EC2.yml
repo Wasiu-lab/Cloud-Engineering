@@ -1,0 +1,103 @@
+# CloudFormation Template
+# This template creates a VPC, Public Subnet, Security Group, and EC2 instance with Nginx
+Resources:
+  # Creates a Virtual Private Cloud (VPC) with DNS support enabled
+  CloudFormationVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16  
+      EnableDnsSupport: 'true'  
+      EnableDnsHostnames: 'true'  
+      Tags:
+       - Key: stack
+         Value: production  
+
+  # Create an Internet Gateway (Allows internet access)
+  CloudforInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: PublicInternetGateway
+
+   # Attach the Internet Gateway to the VPC
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref CloudFormationVPC
+      InternetGatewayId: !Ref CloudforInternetGateway
+
+  # Creates a public subnet within the VPC
+  CloudFormationsubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref CloudFormationVPC  
+      CidrBlock: 10.0.0.0/24  
+      MapPublicIpOnLaunch: true  # Automatically assign public IPs to instances in this subnet
+      AvailabilityZone: !Select [ 0, !GetAZs 'us-east-1' ]  
+      Tags:
+       - Key: stack
+         Value: Publicsubnet  
+
+  # Create a Route Table for the Public Subnet
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref CloudFormationVPC
+      Tags:
+        - Key: Name
+          Value: PublicRouteTable
+
+  # Add a Route to the Internet via the Internet Gateway
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway  
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0  
+      GatewayId: !Ref CloudforInternetGateway
+
+  # Associate the Public Subnet with the Route Table
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref CloudFormationsubnet
+      RouteTableId: !Ref PublicRouteTable
+      
+  # Creates a security group to control traffic to and from the EC2 instance
+  AbdulInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH access to EC2 instance
+      VpcId: !Ref CloudFormationVPC  
+      SecurityGroupIngress:  
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22  
+          CidrIp: 0.0.0.0/0  
+      SecurityGroupEgress:  
+        - IpProtocol: -1  # -1 means all protocols
+          CidrIp: 0.0.0.0/0  
+
+  # Creates an EC2 instance with Nginx web server
+  AbdulInstanceCF:
+    Type: AWS::EC2::Instance
+    Properties: 
+        ImageId: ami-084568db4383264d4  
+        InstanceType: t2.micro  # Instance size (free tier eligible)
+        KeyName: Cloud  # SSH key pair name for accessing the instance
+        SecurityGroupIds:
+          - !Ref AbdulInstanceSecurityGroup  
+        SubnetId: !Ref CloudFormationsubnet  
+        UserData:  
+          Fn::Base64: !Sub |
+              #!/bin/bash
+              sudo apt update -y
+              sudo apt install nginx -y 
+              sudo apt start nginx
+              sudo apt enable nginx
+              echo "<h1>Welcome to Abdul's Nginx Server</h1>" > /var/www/html/index.html
