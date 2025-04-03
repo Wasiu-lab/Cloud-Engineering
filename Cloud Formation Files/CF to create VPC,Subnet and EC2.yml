@@ -1,0 +1,64 @@
+# CloudFormation Template
+# This template creates a VPC, Public Subnet, Security Group, and EC2 instance with Nginx
+AWSTEMPLATE Version: '2010-09-09'  # Specifies the version of the CloudFormation template format
+Description: CloudFormation template to create a VPC, Public Subnet, Security Group, and EC2 instance with Nginx
+Resources:
+  # Creates a Virtual Private Cloud (VPC) with DNS support enabled
+  UsingVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16  # Defines the IP range for the VPC
+      EnableDnsSupport: 'true'  # Enables DNS resolution in the VPC
+      EnableDnsHostnames: 'true'  # Enables DNS hostnames for EC2 instances
+      Tags:
+       - Key: stack
+         Value: production  # Tags the VPC as part of the production stack
+
+  # Creates a public subnet within the VPC
+  Usingsubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref UsingVPC  # References the VPC created above
+      CidrBlock: 10.0.0.0/24  # Defines the IP range for the subnet (256 IPs)
+      MapPublicIpOnLaunch: true  # Automatically assigns public IPs to instances launched in this subnet
+      AvailabilityZone: !Select [ 0, !GetAZs 'us-east-1' ]  # Places the subnet in the first AZ of us-east-1 region
+      Tags:
+       - Key: stack
+         Value: Publicsubnet  # Tags this as a Public subnet
+
+  # Creates a security group to control traffic to and from the EC2 instance
+  AbdulInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH access to EC2 instance
+      VpcId: !Ref UsingVPC  # References the VPC created above
+      SecurityGroupIngress:  # Inbound traffic rules
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  # Allows HTTP traffic from anywhere
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22  
+          CidrIp: 0.0.0.0/0  # Allows SSH traffic from anywhere
+      SecurityGroupEgress:  # Outbound traffic rules
+        - IpProtocol: -1  # -1 means all protocols
+          CidrIp: 0.0.0.0/0  # Allows all outbound traffic
+
+  # Creates an EC2 instance with Nginx web server
+  AbdulInstanceCF:
+    Type: AWS::EC2::Instance
+    Properties: 
+        ImageId: ami-00a929b66ed6e0de6  # Amazon Linux 2 AMI ID
+        InstanceType: t2.micro  # Instance size (free tier eligible)
+        KeyName: Cloud  # SSH key pair name for accessing the instance
+        SecurityGroupIds:
+          - !Ref AbdulInstanceSecurityGroup  # Attaches the security group created above
+        SubnetId: !Ref Usingsubnet  # Places the instance in the subnet created above
+        UserData:  # Bootstrap script that runs when the instance launches
+          Fn::Base64: !Sub |
+              #!/bin/bash
+              yum update -y  # Updates all packages
+              yum install -y nginx  # Installs Nginx web server
+              systemctl start nginx  # Starts Nginx service
+              systemctl enable nginx  # Configures Nginx to start on boot
